@@ -37,14 +37,39 @@ async def check_access_token() -> bool:
     """
     Check if the current access token is valid.
     """
-        
-    if "user_data" not in app.storage.user or not app.storage.user.get("user_data") :
+    if "user_data" not in app.storage.user or not app.storage.user.get("user_data"):
         return False
     
     user_data = app.storage.user["user_data"]
     access_token = user_data.get("access_token")
     
     if not access_token:
+        # Try to refresh the token if refresh_token is available
+        refresh_token = user_data.get("refresh_token")
+        if refresh_token:
+            
+            try:
+                metadata = get_metadata_keycloak()
+                token_endpoint = metadata.get("token_endpoint")
+                
+                if token_endpoint:
+                    refresh_data = {
+                        "grant_type": "refresh_token",
+                        "refresh_token": refresh_token,
+                        "client_id": conf.OAUTH2_CLIENT_ID,
+                        "client_secret": conf.OAUTH2_CLIENT_SECRET,
+                    }
+                    
+                    response = requests.post(token_endpoint, data=refresh_data)
+                    
+                    if response.status_code == 200:
+                        new_tokens = response.json()
+                        # Update user data with new tokens
+                        user_data.update(new_tokens)
+                        app.storage.user["user_data"] = user_data
+                        return True
+            except Exception as e:
+                print(f"Token refresh failed: {e}")
         return False
     
     # Get userinfo endpoint from metadata

@@ -15,6 +15,7 @@ from datetime import datetime
 
 conf: Config = get_config()
 
+
 @dataclass
 class MenuItem:
     name: str
@@ -40,16 +41,18 @@ async def login(request: Request) -> Optional[RedirectResponse]:
 
         url: URL = request.url_for("auth_route")
         return await Auth.authorize_redirect(request, redirect_uri=url)  # type: ignore
+
+
 @ui.refreshable
-async def _home(request: Request) -> None:
+async def _home(request: Request, _loads=False) -> None:
+    ui.label(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}").classes("text-sm text-gray-500")
+    if not _loads:
+        return
     user_data = await get_userdata()
     if user_data:
-        ui.label(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}").classes("text-sm text-gray-500")
-
         ui.label(f"Welcome {user_data.get('userinfo', {}).get('name', '')}!").classes("text-h4")
         ui.label("This is the home page.").classes("text-h6")
         ui.button("Logout", on_click=lambda: Auth.logout(request), color="negative")
-
 
 
 async def HomePage(request: Request) -> None:
@@ -60,16 +63,12 @@ async def HomePage(request: Request) -> None:
             pass
 
     user_data = await get_userdata()
-    
+
     if user_data:
         # await menu(request)
-        from app.pages.views import (
-            Private
-        )
-        menus = [
-            MenuItem(name='Home', label='Home', icon='home', page=_home),
-            MenuItem(name='Private', label='Private', icon='thumb_up', page=Private.View)
-        ]
+        from app.pages.views import Private
+
+        menus = [MenuItem(name="Home", label="Home", icon="home", page=_home), MenuItem(name="Private", label="Private", icon="thumb_up", page=Private.View)]
         with ui.header(fixed=False).classes(replace="bg-neutral-800 row p-0 px-4"):
             with ui.link(target=conf.url_path("/")).classes("flex items-center"):
                 ui.image(
@@ -84,13 +83,14 @@ async def HomePage(request: Request) -> None:
             for menu in menus:
                 if event.value == menu.name:
                     with ui.tab_panel(menu.name):
-                        menu.page.refresh()
+                        menu.page.refresh(request, _loads=True)
                         break
-        with ui.tab_panels(tabs, value='Home', animated=False, keep_alive=False, on_change=handle_tab_change).classes('w-full'):
-            for menu in menus:
-                with ui.tab_panel(menu.name) :
-                    await menu.page(request)
 
+        with ui.tab_panels(tabs, value="Home", animated=False, keep_alive=False, on_change=handle_tab_change).classes("w-full"):
+            for menu in menus:
+                with ui.tab_panel(menu.name):
+                    _loads = True if menu.name == "Home" else False
+                    await menu.page(request, _loads=_loads)
 
         # panels.on('change', handle_tab_change)
         # ui.json_editor({"content": {"json": auth.get_metadata_keycloak()}})
@@ -104,5 +104,3 @@ async def HomePage(request: Request) -> None:
                     on_click=partial(ui.navigate.to, conf.url_path("/login")),
                     color="primary",
                 )
-
-
