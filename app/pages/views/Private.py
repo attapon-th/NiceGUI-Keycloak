@@ -2,12 +2,12 @@
 from fastapi import Request
 from nicegui import ui
 from datetime import datetime
-from app.pkgs.config import Config, get_config
+# from app.pkgs.config import Config, get_config
 
 
 @ui.refreshable
 async def View(request: Request, _loads=False) -> None:
-    conf: Config = get_config()
+    # conf: Config = get_config()
     # from .layout import menu
     # await menu.menu(request)
 
