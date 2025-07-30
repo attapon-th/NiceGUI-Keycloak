@@ -18,6 +18,8 @@ class Config:
     PROJECT_PATH: Path
     STORAGE_PATH: Path
 
+    APP_TITLE: str = "NiceGUI App"
+
     def __init__(self):
         self.DEVMODE = os.getenv("DEVMODE", "1").lower() == "1"
         self.OAUTH2_CLIENT_ID = os.getenv("OAUTH2_CLIENT_ID", "")
@@ -32,16 +34,18 @@ class Config:
         self.STORAGE_PATH = Path(os.getenv("STORAGE_PATH", "storage"))
         self.STORAGE_PATH.mkdir(parents=True, exist_ok=True)
 
+        
 
-    def url_path(self, path: str) -> str:
-        """
-        Constructs a full URL path by joining the APP_BASEPATH with the provided path.
-        """
-        u = f"{self.APP_BASEPATH}{path}"
-        return u
+
+    # def url_path(self, path: str) -> str:
+    #     """
+    #     Constructs a full URL path by joining the APP_BASEPATH with the provided path.
+    #     """
+    #     u = f"{self.APP_BASEPATH}{path}"
+    #     return u
     
-    def navigate_to(self, path: str) -> None:
-        ui.navigate.to(self.url_path(path))
+    # def navigate_to(self, path: str) -> None:
+    #     ui.navigate.to(self.url_path(path))
         
 
         

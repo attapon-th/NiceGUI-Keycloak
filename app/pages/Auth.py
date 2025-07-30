@@ -88,13 +88,14 @@ async def check_access_token() -> bool:
 
 
 async def keycloak_oauth(request: Request) -> RedirectResponse:
+    u = request.url_for("index_route")
     try:
         user_data = await oauth.keycloak.authorize_access_token(request)  # type: ignore
     except OAuthError as e:
         print(f"OAuth error: {e}")
-        return RedirectResponse(conf.url_path("/"))  # or return an error page/message
+        return RedirectResponse(u)  # or return an error page/message
     app.storage.user["user_data"] = user_data
-    return RedirectResponse(conf.url_path("/"))  # Redirect to the home page after successful login
+    return RedirectResponse(u)  # Redirect to the home page after successful login
 
 
 async def logout(request: Request) -> None:

@@ -70,9 +70,9 @@ async def HomePage(request: Request) -> None:
 
         menus = [MenuItem(name="Home", label="Home", icon="home", page=_home), MenuItem(name="Private", label="Private", icon="thumb_up", page=Private.View)]
         with ui.header(fixed=False).classes(replace="bg-neutral-800 row p-0 px-4"):
-            with ui.link(target=conf.url_path("/")).classes("flex items-center"):
+            with ui.link(target="/").classes("flex items-center"):
                 ui.image(
-                    conf.url_path("/static/logo.png")  # Replace with your logo path
+                    "/static/logo.png"  # Replace with your logo path
                 ).classes("w-12 h-12 rounded-full p-2  my-1 mr-4")
             with ui.tabs() as tabs:
                 for menu in menus:
@@ -101,6 +101,6 @@ async def HomePage(request: Request) -> None:
                 ui.label("Please log in to continue.").classes("text-h6")
                 ui.button(
                     "Login",
-                    on_click=partial(ui.navigate.to, conf.url_path("/login")),
+                    on_click=partial(ui.navigate.to, "/login"),
                     color="primary",
                 )
