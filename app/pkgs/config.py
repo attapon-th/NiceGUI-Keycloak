@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
+
 @dataclass
 class Config:
     DEVMODE: bool
@@ -19,7 +20,6 @@ class Config:
     PROJECT_PATH: Path
     STORAGE_PATH: Path
 
-
     def __init__(self):
         self.DEVMODE = os.getenv("DEVMODE", "1").lower() == "1"
         self.OAUTH2_CLIENT_ID = os.getenv("OAUTH2_CLIENT_ID", "")
@@ -35,8 +35,6 @@ class Config:
         self.PROJECT_PATH = Path(os.getenv("PROJECT_PATH", "."))
         self.STORAGE_PATH = Path(os.getenv("STORAGE_PATH", "storage"))
         self.STORAGE_PATH.mkdir(parents=True, exist_ok=True)
-
-        
 
 
 @cache
