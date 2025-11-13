@@ -2,13 +2,10 @@
 
 ## File: .env
 ```dotenv
+DEVMODE=0 # Set to 1 in development mode to enable debug features
+
+
 PYTHONPATH=$(pwd)
-PYTHONDONTWRITEBYTECODE=1
-PYTHONUNBUFFERED=1
-
-
-DEVMODE=1
-DEBUG=True
 
 PROJECT_PATH=$(pwd)
 STORAGE_PATH=${PROJECT_PATH}/storage
