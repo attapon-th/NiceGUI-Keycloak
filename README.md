@@ -1,5 +1,10 @@
 # Nicegui OAuth2 With Keycloak
 
+> TEMPLATE PROJECT - Replace this description with your project description.
+>
+
+This project is a web application built using the Nicegui framework that integrates OAuth2 authentication with Keycloak. It provides a simple interface for users to log in using their Keycloak credentials and access protected resources.
+
 ## File: .env
 ```dotenv
 DEVMODE=0 # Set to 1 in development mode to enable debug features
