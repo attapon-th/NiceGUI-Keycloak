@@ -15,8 +15,8 @@ APP_HOST=localhost
 APP_PORT=8080
 APP_BASEPATH=/app
 
-OAUTH2_CLIENT_ID=admin-panal
-OAUTH2_CLIENT_SECRET=admin-panal-secret
+OAUTH2_CLIENT_ID=client-id
+OAUTH2_CLIENT_SECRET=client-secret
 OAUTH2_METADATA_URL=http://localhost:8081/realms/NiceguiOAuth2/.well-known/openid-configuration
 
 
