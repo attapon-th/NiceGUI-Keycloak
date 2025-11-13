@@ -1,0 +1,56 @@
+# env
+# DOMAIN=
+# APP_BASEPATH=/app
+# OAUTH2_METADATA_URL=
+# OAUTH2_CLIENT_ID=
+# OAUTH2_CLIENT_SECRET=
+# SECRET_KEY=
+# end env
+services:
+  nicegui:
+    image: attap0n/nicegui-oauth2:latest
+    environment:
+      - TZ=Asia/Bangkok
+      - DEV_MODE=0
+      - OAUTH2_METADATA_URL=${OAUTH2_METADATA_URL}
+      - OAUTH2_CLIENT_ID=${OAUTH2_CLIENT_ID}
+      - OAUTH2_CLIENT_SECRET=${OAUTH2_CLIENT_SECRET}
+      - SECRET_KEY=${SECRET_KEY}
+      - NICEGUI_REDIS_URL=redis://redis:6379/0
+      - APP_PORT=8080
+      - APP_BASEPATH=${APP_BASEPATH}
+
+    deploys:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.nicegui.rule=Host(`${DOMAIN}`) && PathPrefix(`${APP_BASEPATH}`)"
+        - "traefik.http.services.nicegui.loadbalancer.server.port=8080"
+        - "traefik.http.routers.nicegui.entrypoints=websecure"
+        - "traefik.http.routers.nicegui.tls = true"
+
+    networks:
+      - nicegui-network
+      - proxy
+   
+
+  redis:
+    image: redis:latest
+    environment:
+      - TZ=Asia/Bangkok
+    deploys:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - nicegui-network
+
+
+networks:
+  nicegui-network: {}
+  proxy:
+    external: true
