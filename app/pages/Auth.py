@@ -86,8 +86,9 @@ async def refresh_token(request: Request) -> bool:
             new_tokens = await oauth.keycloak.fetch_access_token()  # type: ignore
             user_data.update(new_tokens)
             app.storage.user["user_data"] = user_data
-            ex = datetime.fromtimestamp(new_tokens.get("expires_at", 0))
-            ui.notify(f"Token refreshed successfully, expires at {ex.strftime('%Y-%m-%d %H:%M:%S')}", color="positive")
+            # ex = datetime.fromtimestamp(new_tokens.get("expires_at", 0))
+            # ui.notify(f"Token refreshed successfully, expires at {ex.strftime('%Y-%m-%d %H:%M:%S')}", color="positive")
+
             return True
         except Exception as e:
             log.error(f"Token refresh failed: {e}", exc_info=True)
