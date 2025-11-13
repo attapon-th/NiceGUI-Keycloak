@@ -14,6 +14,8 @@ from app.pages.Home import HomePage  # noqa
 conf: Config = get_config()
 
 
+
+
 @ui.page("/login", title=f"Login - {conf.APP_TITLE}")
 async def login(request: Request) -> Optional[RedirectResponse]:
     return await Auth.login(request)
@@ -24,12 +26,13 @@ async def auth_route(request: Request) -> RedirectResponse:
     return await Auth.keycloak_oauth(request)
 
 
-@app.get("/logout")
-async def logout_route(request: Request) -> None:
-    await Auth.logout(request)
+@ui.page("/logout")
+async def logout_route(request: Request) -> RedirectResponse:
+    return await Auth.logout(request)
 
 
 @ui.page("/", title=f"Home - {conf.APP_TITLE}")
+@ui.page("/{_}", title=f"Home - {conf.APP_TITLE}") # for sub-pages
 async def index_route(request: Request) -> None:
     return await HomePage(request)
 
