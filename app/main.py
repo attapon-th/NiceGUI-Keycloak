@@ -10,6 +10,9 @@ from starlette.responses import RedirectResponse  # noqa
 from app.pkgs.config import Config, get_config  # noqa
 from app.pages import Auth # noqa
 from app.pages.Home import HomePage  # noqa
+from functools import cache
+import base64
+
 
 conf: Config = get_config()
 
@@ -40,7 +43,16 @@ async def index_route(request: Request) -> None:
 app.add_static_files("/static", "static")
 app.root_path = conf.APP_BASEPATH
 app.root_path_in_servers = True
+
+@cache
+def get_favicon_base64() -> str:
+    with open("static/logo.png", "rb") as f:
+        encoded = base64.b64encode(f.read()).decode("utf-8")
+    return f"data:image/png;base64,{encoded}"
+
+
 ui.run(
+    favicon=get_favicon_base64(),
     reload=conf.DEVMODE,
     host=conf.APP_HOST,
     port=conf.APP_PORT,
