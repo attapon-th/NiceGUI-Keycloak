@@ -83,7 +83,7 @@ async def refresh_token(request: Request) -> bool:
     refresh_token = user_data.get("refresh_token", "")
     if refresh_token:
         try:
-            new_tokens = await oauth.keycloak.fetch_access_token()  # type: ignore
+            new_tokens = await oauth.keycloak.fetch_access_token(grant_type="refresh_token", refresh_token=refresh_token)  # type: ignore
             user_data.update(new_tokens)
             app.storage.user["user_data"] = user_data
             # ex = datetime.fromtimestamp(new_tokens.get("expires_at", 0))
